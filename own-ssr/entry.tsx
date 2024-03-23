@@ -1,50 +1,50 @@
-import React from "react";
 import ReactDOM from "react-dom";
-import { FunctionComponent, createElement, useState } from "react";
 import { OwnSSRContext } from "./context";
+import React, { Attributes } from "react";
+import { Page } from "./utils/types";
+import { hydrateRoot } from "react-dom/client";
 
 type Props = {
-  page: {
-    component: FunctionComponent<unknown>;
-    props: unknown;
-  };
+  page: Page;
 };
 
-export function App({ page }: Props) {
-  const [activePage, setActivePage] = useState(page);
+interface WindowWithProps extends Window {
+  OWN_SSR_PROPS: Attributes | null | undefined;
+}
 
+export function App({ page }: Props) {
+  const [activePage, setActivePage] = React.useState(page);
   return (
     <OwnSSRContext.Provider value={{ activePage, setActivePage }}>
-      {createElement(page.component, page?.props ?? {})}
+      {React.createElement(activePage.component, activePage.props)}
     </OwnSSRContext.Provider>
   );
 }
 
-interface WindowWithProps extends Window {
-  OWN_SSR_PROPS: unknown;
-}
-
-const hydrate = async () => {
+export const hydrate = async () => {
   console.log("HYDRATE");
-
-  const activePage = global.ownSSR_Routes?.find(
-    (route) => route.path === location.pathname
+  const activeRoute = global.ownSSR_Routes.find(
+    (route) => route.path === window.location.pathname
   );
 
-  const { default: component } = await activePage.getComponent();
+  const { default: component } = await activeRoute.getComponent();
 
-  ReactDOM.hydrate(
+  hydrateRoot(
+    document.getElementById("root"),
     <App
       page={{
         props: (window as unknown as WindowWithProps).OWN_SSR_PROPS,
         path: window.location.pathname,
         component,
       }}
-    />,
-    document.getElementById("root")
+    />
   );
 };
 
+// So this is never called.Hydration just does not work atm,
+// switching to modern vite way to handle things.
+//  checkout ongoing work on branch feat/vite-ssr
 if (!import.meta.env.SSR) {
+  console.log("KIKOu");
   hydrate();
 }

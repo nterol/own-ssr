@@ -13,8 +13,6 @@ export function serverRenderRoutes({ vite }: ServerProps): RequestHandler {
   return async (req, res) => {
     const url = req.originalUrl;
 
-    console.log("IN RENDER ROUTES", global.ownSSR_Routes);
-
     try {
       const { template, Page, App, props } = await pageLoader({ url, vite });
 

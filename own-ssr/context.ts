@@ -35,6 +35,8 @@ async function getServerData(to) {
 export function useOwnContext() {
   const { setActivePage } = useContext(OwnSSRContext);
 
+  console.log("Am I called");
+
   return {
     navigate: async (to: string) => {
       const [props, { default: component }] = await Promise.all([

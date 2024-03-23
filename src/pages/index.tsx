@@ -20,9 +20,9 @@ export async function getServerSideProps(): Promise<{ props: Props }> {
 }
 
 export default function Home({ message }: Props) {
-  function handleClick() {
-    alert("Hello from Vite!");
-  }
+  const handleClick = () => {
+    console.log("HELLo From OWN SSR");
+  };
   return (
     <main>
       <h1>Welcome to homepage</h1>
