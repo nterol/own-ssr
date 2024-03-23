@@ -1,4 +1,3 @@
-import ReactDOM from "react-dom";
 import { OwnSSRContext } from "./context";
 import React, { Attributes } from "react";
 import { Page } from "./utils/types";
@@ -28,20 +27,21 @@ export const hydrate = async () => {
   );
 
   const { default: component } = await activeRoute.getComponent();
-
-  hydrateRoot(
-    document.getElementById("root"),
-    <App
-      page={{
-        props: (window as unknown as WindowWithProps).OWN_SSR_PROPS,
-        path: window.location.pathname,
-        component,
-      }}
-    />
-  );
+  const root = document.getElementById("root");
+  if (root)
+    hydrateRoot(
+      root,
+      <App
+        page={{
+          props: (window as unknown as WindowWithProps).OWN_SSR_PROPS,
+          path: window.location.pathname,
+          component,
+        }}
+      />
+    );
 };
 
-// So this is never called.Hydration just does not work atm,
+// So this is never called. Hydration just does not work atm,
 // switching to modern vite way to handle things.
 //  checkout ongoing work on branch feat/vite-ssr
 if (!import.meta.env.SSR) {
