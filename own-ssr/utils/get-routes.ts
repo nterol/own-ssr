@@ -14,7 +14,7 @@ export async function getAllRoutes() {
     onlyFiles: true,
   })) {
     const striped = file.replace(".tsx", "");
-    console.log(`../src/page/${file}`);
+
     const singleRoute = {
       path: `/${striped.replace("index", "")}`,
       getComponent: () => import(`../src/pages/${striped}.tsx`),
