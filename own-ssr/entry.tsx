@@ -45,6 +45,5 @@ export const hydrate = async () => {
 // switching to modern vite way to handle things.
 //  checkout ongoing work on branch feat/vite-ssr
 if (!import.meta.env.SSR) {
-  console.log("KIKOu");
   hydrate();
 }

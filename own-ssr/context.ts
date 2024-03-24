@@ -1,8 +1,6 @@
 import { createContext, useContext } from "react";
 import { SingleRoute, type Page } from "./utils/types";
 
-//export const routes = await getAllRoutes();
-
 // const routes = [
 //   {
 //     path: "/",
@@ -28,23 +26,20 @@ type OwnSSRContext = {
 
 export const OwnSSRContext = createContext<OwnSSRContext>({} as OwnSSRContext);
 
-async function getServerData(to) {
+async function getServerData(to: string) {
   return await fetch(`data/${to}`).then((d) => d.json());
 }
 
 export function useOwnContext() {
+  console.log({ ssr: import.meta.env.SSR });
   const { setActivePage } = useContext(OwnSSRContext);
-
-  console.log("Am I called");
 
   return {
     navigate: async (to: string) => {
       const [props, { default: component }] = await Promise.all([
         getServerData(to),
         (
-          global.ownSSR_Routes?.find(
-            (route) => route.path === to
-          ) as SingleRoute
+          global.ownSSR_Routes.find((route) => route.path === to) as SingleRoute
         ).getComponent(),
       ]);
 

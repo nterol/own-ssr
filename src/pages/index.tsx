@@ -1,3 +1,6 @@
+import Counter from "../components/counter";
+import { Link } from "../../own-ssr/utils/link";
+
 type Props = {
   message: string;
 };
@@ -20,14 +23,14 @@ export async function getServerSideProps(): Promise<{ props: Props }> {
 }
 
 export default function Home({ message }: Props) {
-  const handleClick = () => {
-    console.log("HELLo From OWN SSR");
-  };
+  const handleClick = () => {};
   return (
     <main>
       <h1>Welcome to homepage</h1>
       <p>{message}</p>
       <button onClick={handleClick}>Click me</button>
+      <Counter />
+      <Link to={"/my-component"}>Go to my component</Link>
     </main>
   );
 }
